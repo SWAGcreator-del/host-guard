@@ -41,9 +41,17 @@ def get_sample(minutes):
     c = db.cursor()
     border = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() - minutes * 60))
     c.execute("SELECT * FROM logs WHERE datetime > ?", (border,))
-    res = c.fetchall()
+    res = c.fetchall() # вернуть данные в виде кортежа
     db.close()
     return res
+
+def clean_logs(hours):
+    db = get_connection()
+    c = db.cursor()
+    border = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() - hours * 3600))
+    c.execute("DELETE FROM logs WHERE datetime < ?", (border, ))
+    db.commit()
+    db.close()
 
 # Тест
 if __name__ == "__main__":
