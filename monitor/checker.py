@@ -11,8 +11,8 @@ def check_load(load):
     check_disk = 0
 
     # Параметры проверки
-    for l in load:
-        _, cpu, net_recv, net_sent, ram, disk = l
+    for line in load:
+        _, cpu, net_recv, net_sent, ram, disk = line
         if cpu > CPU:
             check_cpu += 1
         if net_recv > NET_RECV:

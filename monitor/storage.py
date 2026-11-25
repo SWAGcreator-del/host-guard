@@ -20,6 +20,10 @@ def init_db():
         memory REAL,
         disk REAL
     )""")
+    c.execute("""CREATE TABLE IF NOT EXISTS alerts (
+        datetime text,
+        last_sent  REAL
+    )""")
 
     db.commit() # сохранить параметры
     db.close()
@@ -45,6 +49,7 @@ def get_sample(minutes):
     db.close()
     return res
 
+# Удаляет логи, которые старше, чем значение hours
 def clean_logs(hours):
     db = get_connection()
     c = db.cursor()
@@ -52,6 +57,12 @@ def clean_logs(hours):
     c.execute("DELETE FROM logs WHERE datetime < ?", (border, ))
     db.commit()
     db.close()
+
+# Внесет в базу данных последнюю problem из main.py
+def add_last_alert(problem):
+    db = get_connection()
+    c = db.cursor()
+    
 
 # Тест
 if __name__ == "__main__":
