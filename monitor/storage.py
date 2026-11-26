@@ -86,7 +86,6 @@ def read_alerts(minutes):
     db.close()
     return [line[0] for line in lines] # выводит множество
 
-# Тест
 if __name__ == "__main__":
     init_db()
     print("Create table", DB_PATH)
