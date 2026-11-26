@@ -9,16 +9,19 @@ TEXTS = {
     "netRecv": "Возможна DDOS атака!",
     "disk": "Хранилище переполнено!",
 }
+WINDOW_MINUTES = 15
+COOLDOWN_MINUTES = 15
+KEEP_HOURS = 2
 
 
 init_db()
 net_recv, net_sent = net_stat()
 save(get_cpu(), get_memory(), get_diskUsed(), net_recv, net_sent)
-problems = (check_load(get_sample(15)))
+problems = (check_load(get_sample(WINDOW_MINUTES)))
 
 def check_problems(problems):
     # получение старого alert
-    recent = read_alerts(15)
+    recent = read_alerts(COOLDOWN_MINUTES)
     new = [p for p in problems if p not in recent]
     if not new:
         return
@@ -27,6 +30,6 @@ def check_problems(problems):
     send(text)
     add_last_alert(new)
 check_problems(problems)
-clean_logs(2)
-delete_old_alerts(2)
+clean_logs(KEEP_HOURS)
+delete_old_alerts(KEEP_HOURS)
         
