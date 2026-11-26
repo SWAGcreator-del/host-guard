@@ -13,6 +13,7 @@ def send(text):
     chatid = os.getenv("TELEGRAM_CHAT_ID")
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     requests.post(url, data={"chat_id": chatid, "text": text})
+
 if __name__ == "__main__":
     send("Сдарова")
 

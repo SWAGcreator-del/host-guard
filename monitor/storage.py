@@ -59,10 +59,32 @@ def clean_logs(hours):
     db.close()
 
 # Внесет в базу данных последнюю problem из main.py
-def add_last_alert(problem):
+def add_last_alert(problems):
     db = get_connection()
     c = db.cursor()
-    
+    for problem in problems:
+        time_alert = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+        alert = problem
+        c.execute("INSERT INTO alerts VALUES (?, ?)", (time_alert, alert))
+    db.commit()
+    db.close()
+
+def delete_old_alerts(hours):
+    db = get_connection()
+    c = db.cursor()
+    border = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() - hours * 3600))
+    c.execute("DELETE FROM alerts WHERE datetime < ?", (border, ))
+    db.commit()
+    db.close()
+
+def read_alerts(minutes):
+    db = get_connection()
+    c = db.cursor()
+    border = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() - minutes * 60))
+    c.execute("SELECT last_sent FROM alerts WHERE datetime >= ?", (border, ))
+    lines = c.fetchall() # получаем линии колонок
+    db.close()
+    return [line[0] for line in lines] # выводит множество
 
 # Тест
 if __name__ == "__main__":
